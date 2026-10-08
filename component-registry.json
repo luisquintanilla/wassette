@@ -53,5 +53,60 @@
         "name": "Go Module Information",
         "description": "A Go module component",
         "uri": "oci://ghcr.io/microsoft/gomodule-go:latest"
+    },
+    {
+        "name": "arXiv Research (.NET)",
+        "description": "An arXiv research component using .NET 10 NativeAOT",
+        "uri": "oci://ghcr.io/microsoft/arxiv-dotnet:latest"
+    },
+    {
+        "name": "Brave Search (.NET)",
+        "description": "A Brave Search component using .NET 10 NativeAOT",
+        "uri": "oci://ghcr.io/microsoft/brave-search-dotnet:latest"
+    },
+    {
+        "name": "Expression Evaluation (.NET)",
+        "description": "A NativeAOT-safe expression evaluation component using .NET 10",
+        "uri": "oci://ghcr.io/microsoft/eval-dotnet:latest"
+    },
+    {
+        "name": "Fetch (.NET)",
+        "description": "A WASI HTTP fetch component using .NET 10 NativeAOT",
+        "uri": "oci://ghcr.io/microsoft/fetch-dotnet:latest"
+    },
+    {
+        "name": "Filesystem (.NET)",
+        "description": "A policy-controlled filesystem component using .NET 10 NativeAOT",
+        "uri": "oci://ghcr.io/microsoft/filesystem-dotnet:latest"
+    },
+    {
+        "name": "Open-Meteo Weather (.NET)",
+        "description": "An Open-Meteo weather component using .NET 10 NativeAOT",
+        "uri": "oci://ghcr.io/microsoft/get-open-meteo-weather-dotnet:latest"
+    },
+    {
+        "name": "Weather Server (.NET)",
+        "description": "An OpenWeather component using .NET 10 NativeAOT",
+        "uri": "oci://ghcr.io/microsoft/get-weather-dotnet:latest"
+    },
+    {
+        "name": "GitHub API (.NET)",
+        "description": "A read-only GitHub REST subset using .NET 10 NativeAOT",
+        "uri": "oci://ghcr.io/microsoft/github-dotnet:latest"
+    },
+    {
+        "name": "Go Module Information (.NET)",
+        "description": "A Go module proxy component using .NET 10 NativeAOT",
+        "uri": "oci://ghcr.io/microsoft/gomodule-dotnet:latest"
+    },
+    {
+        "name": "Memory Server (.NET)",
+        "description": "An in-memory knowledge graph component using .NET 10 NativeAOT",
+        "uri": "oci://ghcr.io/microsoft/memory-dotnet:latest"
+    },
+    {
+        "name": "Time Server (.NET)",
+        "description": "A WASI wall-clock component using .NET 10 NativeAOT",
+        "uri": "oci://ghcr.io/microsoft/time-server-dotnet:latest"
     }
 ]

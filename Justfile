@@ -162,14 +162,65 @@ ensure-wit-docs-inject:
         echo "wit-docs-inject is already installed"
     fi
 
+# Require the .NET 10 SDK used by componentize-dotnet examples.
+ensure-dotnet:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    version="$(dotnet --version)"
+    expected="${DOTNET_VERSION:-10.0.112}"
+    if [[ "$version" != "$expected" ]]; then
+        echo "error: .NET SDK $expected is required (found $version)" >&2
+        exit 1
+    fi
+
 # Inject docs into a wasm component
 inject-docs wasm_path wit_dir:
     @echo "Injecting docs into {{ wasm_path }}"
     wit-docs-inject --component {{ wasm_path }} --wit-dir {{ wit_dir }} --inplace
 
+build-dotnet-examples: ensure-dotnet ensure-wit-docs-inject
+    mkdir -p bin
+    (cd examples/time-server-dotnet && just build)
+    (cd examples/fetch-dotnet && just build)
+    (cd examples/filesystem-dotnet && just build)
+    (cd examples/get-weather-dotnet && just build)
+    (cd examples/get-open-meteo-weather-dotnet && just build)
+    (cd examples/memory-dotnet && just build)
+    (cd examples/eval-dotnet && just build)
+    (cd examples/gomodule-dotnet && just build)
+    (cd examples/brave-search-dotnet && just build)
+    (cd examples/arxiv-dotnet && just build)
+    (cd examples/github-dotnet && just build)
+    # Context7 has a buildable contract but is not published until response mapping is complete.
+    (cd examples/context7-dotnet && just build)
+    just inject-docs examples/time-server-dotnet/bin/Release/net10.0/wasi-wasm/native/time-server-dotnet.wasm examples/time-server-dotnet/wit
+    just inject-docs examples/fetch-dotnet/bin/Release/net10.0/wasi-wasm/native/fetch-dotnet.wasm examples/fetch-dotnet/wit
+    just inject-docs examples/filesystem-dotnet/bin/Release/net10.0/wasi-wasm/native/filesystem-dotnet.wasm examples/filesystem-dotnet/wit
+    just inject-docs examples/get-weather-dotnet/bin/Release/net10.0/wasi-wasm/native/get-weather-dotnet.wasm examples/get-weather-dotnet/wit
+    just inject-docs examples/get-open-meteo-weather-dotnet/bin/Release/net10.0/wasi-wasm/native/get-open-meteo-weather-dotnet.wasm examples/get-open-meteo-weather-dotnet/wit
+    just inject-docs examples/memory-dotnet/bin/Release/net10.0/wasi-wasm/native/memory-dotnet.wasm examples/memory-dotnet/wit
+    just inject-docs examples/eval-dotnet/bin/Release/net10.0/wasi-wasm/native/eval-dotnet.wasm examples/eval-dotnet/wit
+    just inject-docs examples/gomodule-dotnet/bin/Release/net10.0/wasi-wasm/native/gomodule-dotnet.wasm examples/gomodule-dotnet/wit
+    just inject-docs examples/brave-search-dotnet/bin/Release/net10.0/wasi-wasm/native/brave-search-dotnet.wasm examples/brave-search-dotnet/wit
+    just inject-docs examples/arxiv-dotnet/bin/Release/net10.0/wasi-wasm/native/arxiv-dotnet.wasm examples/arxiv-dotnet/wit
+    just inject-docs examples/github-dotnet/bin/Release/net10.0/wasi-wasm/native/github-dotnet.wasm examples/github-dotnet/wit
+    for component in time-server fetch filesystem get-weather get-open-meteo-weather memory eval gomodule brave-search arxiv github; do wasm-tools validate "examples/$component-dotnet/bin/Release/net10.0/wasi-wasm/native/$component-dotnet.wasm"; done
+    cp examples/time-server-dotnet/bin/Release/net10.0/wasi-wasm/native/time-server-dotnet.wasm bin/time-server-dotnet.wasm
+    cp examples/fetch-dotnet/bin/Release/net10.0/wasi-wasm/native/fetch-dotnet.wasm bin/fetch-dotnet.wasm
+    cp examples/filesystem-dotnet/bin/Release/net10.0/wasi-wasm/native/filesystem-dotnet.wasm bin/filesystem-dotnet.wasm
+    cp examples/get-weather-dotnet/bin/Release/net10.0/wasi-wasm/native/get-weather-dotnet.wasm bin/get-weather-dotnet.wasm
+    cp examples/get-open-meteo-weather-dotnet/bin/Release/net10.0/wasi-wasm/native/get-open-meteo-weather-dotnet.wasm bin/get-open-meteo-weather-dotnet.wasm
+    cp examples/memory-dotnet/bin/Release/net10.0/wasi-wasm/native/memory-dotnet.wasm bin/memory-dotnet.wasm
+    cp examples/eval-dotnet/bin/Release/net10.0/wasi-wasm/native/eval-dotnet.wasm bin/eval-dotnet.wasm
+    cp examples/gomodule-dotnet/bin/Release/net10.0/wasi-wasm/native/gomodule-dotnet.wasm bin/gomodule-dotnet.wasm
+    cp examples/brave-search-dotnet/bin/Release/net10.0/wasi-wasm/native/brave-search-dotnet.wasm bin/brave-search-dotnet.wasm
+    cp examples/arxiv-dotnet/bin/Release/net10.0/wasi-wasm/native/arxiv-dotnet.wasm bin/arxiv-dotnet.wasm
+    cp examples/github-dotnet/bin/Release/net10.0/wasi-wasm/native/github-dotnet.wasm bin/github-dotnet.wasm
+
 build-examples mode="debug":
     mkdir -p bin
     just ensure-wit-docs-inject
+    just build-dotnet-examples
     (cd examples/fetch-rs && just build {{ mode }})
     (cd examples/filesystem-rs && just build {{ mode }})
     (cd examples/get-weather-js && just build)
